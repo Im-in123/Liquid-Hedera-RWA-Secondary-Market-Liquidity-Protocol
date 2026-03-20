@@ -15,8 +15,7 @@ import { KMSClient, SignCommand, GetPublicKeyCommand } from '@aws-sdk/client-kms
 import {
   Client, AccountId, TopicMessageSubmitTransaction, TopicId, PublicKey, PrivateKey,
 } from '@hashgraph/sdk';
-import deployed from '../deployed-addresses.json' assert { type: 'json' };
-
+import deployed from '../deployed-addresses.json' with { type: 'json' };
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const COMPLIANCE_REGISTRY_ADDRESS = deployed.contracts.complianceRegistry;
