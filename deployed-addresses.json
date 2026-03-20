@@ -1,0 +1,83 @@
+{
+  "network": "hedera-testnet",
+  "chainId": 296,
+  "deployedAt": "2026-03-20T13:34:52.837Z",
+  "deployer": "0x9C25522A434FFb8Bf5E12C2E32412702F6c6384d",
+  "hcsTopicId": "0.0.8305515",
+  "kmsOperator": {
+    "evmAddress": "0x764df5f8022c2e1d23f2422b2b8f24bcccc02865",
+    "accountId": "0.0.8290378"
+  },
+  "contracts": {
+    "usdc": "0x373785c571025d0Bb407e77073490FE7b325eB44",
+    "adaptiveAMM": "0xe8424D5F825C09f06063a1d089788726e5Fb01B5",
+    "liquidityVault": "0x7F68E4B9f0B0196777659a4804289904e2699765",
+    "complianceRegistry": "0x627bEe1347c8C4A57813EE8517c3043E2c2674B6",
+    "treasuryManager": "0x70417984c62d17Cd9fe1Ac58152a903d6bf5631C",
+    "atsIdentityRegistry": "0xD13e101fAF4ae4569Eb7C08b390BD3198a0185ad"
+  },
+  "tokens": {
+    "RWAPROP": {
+      "address": "0x37b2d3230707FD12c133af35132EA89A0e32ebF5",
+      "name": "RWA Property Token",
+      "description": "Commercial Property — Austin TX",
+      "standard": "ERC-3643"
+    },
+    "RWAEQUITY": {
+      "address": "0x47046D3b278CCb57B035f0fA50d03A063B2bFb1b",
+      "name": "RWA Equity Token",
+      "description": "Private Equity Fund",
+      "standard": "ERC-3643"
+    },
+    "RWABOND": {
+      "address": "0x60a4F6C5891e02B19d28db11141b76386eadC0AD",
+      "name": "RWA Bond Token",
+      "description": "Corporate Bond",
+      "standard": "ERC-3643"
+    }
+  },
+  "pools": {
+    "RWAPROP": {
+      "ammPoolId": "0xfd2dea487545594e96353517560fdc7f6c8ace288504f909e0358ca305b3da4d",
+      "lpTokenAddress": "0x6093b5a7f153bE265058b36056acc7FC0330E58C",
+      "assetToken": "0x37b2d3230707FD12c133af35132EA89A0e32ebF5",
+      "assetSymbol": "RWAPROP",
+      "quoteToken": "0x373785c571025d0Bb407e77073490FE7b325eB44",
+      "quoteSymbol": "USDC",
+      "initialPrice": "200.00",
+      "tradingFee": "0.3%",
+      "staking": {
+        "rwaStakePoolId": "0xd85292e187c07f98259e9c1afafcd703a0b88ce81388cb71c2dd1071921851c0",
+        "lpMiningPoolId": "0x91cb608b656bf19c537ca9edf2b460d8cc976247c7d5f8dded5f8c5a7fd2c86f"
+      }
+    },
+    "RWAEQUITY": {
+      "ammPoolId": "0xde2ede45e36d95c17d33d353e9001cf1cf467c4b2825601fc385f97137f66e7a",
+      "lpTokenAddress": "0xDc1419251fB9bd2ddb8C7C4E732C0b5e654D5A0e",
+      "assetToken": "0x47046D3b278CCb57B035f0fA50d03A063B2bFb1b",
+      "assetSymbol": "RWAEQUITY",
+      "quoteToken": "0x373785c571025d0Bb407e77073490FE7b325eB44",
+      "quoteSymbol": "USDC",
+      "initialPrice": "50.00",
+      "tradingFee": "0.3%",
+      "staking": {
+        "rwaStakePoolId": "0x8e6ff1dfa348a80e8a6112f3b7a64b5ebf36cf373255d0f63b6af07cb20c5fcf",
+        "lpMiningPoolId": "0x50f2cba55fe3bc41f4950eff5f31d4b27cd18d49cedcd69016c395defc3cee96"
+      }
+    },
+    "RWABOND": {
+      "ammPoolId": "0xe28669389ef43c225c4f92a896e5e43e75ff451cbf66c7101d78bb661d77204b",
+      "lpTokenAddress": "0xd03BdCb30fe9E6cA70908579ab9c57982236141a",
+      "assetToken": "0x60a4F6C5891e02B19d28db11141b76386eadC0AD",
+      "assetSymbol": "RWABOND",
+      "quoteToken": "0x373785c571025d0Bb407e77073490FE7b325eB44",
+      "quoteSymbol": "USDC",
+      "initialPrice": "100.00",
+      "tradingFee": "0.3%",
+      "staking": {
+        "rwaStakePoolId": "0xd90849084ffbc3c54f5953ed484814335487a7a2f1ff5a26daaf269f4b775e34",
+        "lpMiningPoolId": "0xd64e1f5f29ec8fd3dd93d810c55f0cf29d64660c37d3dd5f5ab2cc0635290783"
+      }
+    }
+  }
+}
