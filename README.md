@@ -29,18 +29,20 @@ Research shows **$25B+ in tokenized RWAs have negligible secondary-market depth*
 
 ### Core Features
 
-1. **Appraisal-Anchored Adaptive AMM**
-   - Uses Curve Finance's stableswap invariant adapted for RWA tokens
-   - Price is anchored to a real-world NAV (appraisal value) via a `pegPrice` parameter — both reserves are scaled to USDC units so the curve treats them as near-peg assets
-   - Amplification factor (A) controls how tightly price tracks NAV — not pure supply/demand
-   - Works for assets with ZERO trading history — price discovery starts from fundamentals
 
-2. **Dual-Mode Liquidity & Staking System**
-   - LPs add USDC + RWA token pairs to earn 0.3% trading fees and receive LP tokens
+
+1. **Dual-Mode Liquidity & Staking System**
+   - Liquidity Pools add USDC + RWA token pairs to earn 0.3% trading fees and receive LP tokens
    - **RWA Staking:** Stake RWA tokens directly → earn USDC yield (simulating real asset income)
    - **LP Mining:** Stake LP tokens → earn bonus RWA token rewards
    - Two-step flow: add liquidity → receive LP tokens → stake LP tokens for compounded yield
 
+2. **Appraisal-Anchored Adaptive AMM**
+   - Uses Curve Finance's stableswap invariant adapted for RWA tokens
+   - Price is anchored to a real-world NAV (appraisal value) via a `pegPrice` parameter — both reserves are scaled to USDC units so the curve treats them as near-peg assets
+   - Amplification factor (A) controls how tightly price tracks NAV — not pure supply/demand
+   - Works for assets with ZERO trading history — price discovery starts from fundamentals
+   
 3. **Compliance-Aware Trading (ERC-3643 / T-REX)**
    - RWA tokens implement the full ERC-3643 standard — compliance is enforced at the token level
    - Every transfer checks identity (ATSIdentityRegistry) and compliance (ComplianceRegistry)
