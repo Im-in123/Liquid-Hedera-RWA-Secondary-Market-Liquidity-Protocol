@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { useWallet } from '../context/WalletContext';
 import { useContracts } from '../hooks/useContracts';
 import { useMirrorNode } from '../hooks/useMirrorNode';
-import { POOLS, POOL_SYMBOLS, TOKENS, CONTRACTS, NETWORK } from '../config/contracts';
+import { POOLS, POOL_SYMBOLS, TOKENS, NETWORK } from '../config/contracts';
 import { NotificationBanner } from '../components/NotificationBanner';
 
 const FEATURED = POOL_SYMBOLS[0];
@@ -401,100 +401,7 @@ function Dashboard() {
             </Panel>
           </div>
 
-          {/* ── Hedera Mirror Node Activity ── */}
-          <Panel
-            title="On-Chain Activity"
-            badge="HEDERA MIRROR NODE"
-            action={null}
-          >
-            {/* Protocol stats from Mirror Node */}
-            {protocolStats && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px', marginBottom: '14px' }}>
-                {[
-                  { label: 'Total Txs', value: protocolStats.totalTransactions },
-                  { label: 'Successful', value: protocolStats.successfulTxs },
-                  { label: 'Unique Users', value: protocolStats.uniqueUsers },
-                  { label: 'Last Activity', value: fmtTs(protocolStats.lastActivity) },
-                ].map(({ label, value }) => (
-                  <div key={label} style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.15)', borderRadius: '8px', padding: '10px 12px' }}>
-                    <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '4px' }}>{label}</div>
-                    <div style={{ fontSize: '16px', fontWeight: 700, color: '#e2e8f0' }}>{value}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Transaction list */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '12px', color: '#475569' }}>
-                {lastFetched ? `Updated ${lastFetched.toLocaleTimeString()}` : 'Loading from Hedera Mirror Node...'}
-              </span>
-              <button onClick={mirrorRefresh} disabled={mirrorLoading} style={{
-                fontSize: '12px', color: '#6366f1', background: 'rgba(99,102,241,0.08)',
-                border: '1px solid rgba(99,102,241,0.2)', borderRadius: '5px',
-                padding: '3px 10px', cursor: 'pointer',
-              }}>
-                {mirrorLoading ? 'Fetching...' : '↻ Refresh'}
-              </button>
-            </div>
-
-            {mirrorLoading && ammTransactions.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '20px', color: '#475569', fontSize: '14px' }}>
-                <div className="animate-pulse">Fetching from Hedera Mirror Node...</div>
-              </div>
-            ) : ammTransactions.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '20px', color: '#475569', fontSize: '14px' }}>
-                No transactions found yet
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '240px', overflowY: 'auto' }}>
-                {ammTransactions.map((tx, i) => (
-                  <div key={tx.hash ?? i} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '8px 10px', borderRadius: '7px',
-                    background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)',
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span style={{
-                        fontSize: '11px', fontWeight: 700, padding: '2px 7px', borderRadius: '4px',
-                        background: tx.result === 'SUCCESS' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
-                        color: tx.result === 'SUCCESS' ? '#10B981' : '#f87171',
-                        border: `1px solid ${tx.result === 'SUCCESS' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`,
-                      }}>{tx.result === 'SUCCESS' ? '✓' : '✗'}</span>
-                      <div>
-                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#e2e8f0' }}>
-                          {decodeSelector(tx.functionCall)}
-                        </div>
-                        <div style={{ fontSize: '11px', color: '#475569' }}>
-                          {tx.from ? `${tx.from.slice(0, 8)}...${tx.from.slice(-6)}` : '—'}
-                        </div>
-                      </div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '12px', color: '#64748b' }}>{fmtTs(tx.timestamp)}</div>
-                      <a
-                        href={`${NETWORK.explorerUrl}/transaction/${tx.hash}`}
-                        target="_blank" rel="noopener noreferrer"
-                        style={{ fontSize: '11px', color: '#6366f1', textDecoration: 'none' }}>
-                        HashScan →
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Mirror Node attribution */}
-            <div style={{ marginTop: '10px', padding: '8px 10px', borderRadius: '6px', background: 'rgba(139,92,246,0.04)', border: '1px solid rgba(139,92,246,0.1)' }}>
-              <div style={{ fontSize: '11px', color: '#64748b' }}>
-                📡 Data sourced directly from{' '}
-                <a href="https://testnet.mirrornode.hedera.com" target="_blank" rel="noopener noreferrer" style={{ color: '#8B5CF6', textDecoration: 'none' }}>
-                  Hedera Mirror Node
-                </a>
-                {' '}— not from Liquid's backend. Immutable, verifiable on-chain data.
-              </div>
-            </div>
-          </Panel>
+          
 
         </div>
       )}

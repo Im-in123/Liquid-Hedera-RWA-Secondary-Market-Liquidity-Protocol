@@ -253,11 +253,9 @@ cp .env.example .env
 ### Environment Variables
 ```
 # Hedera
-HEDERA_NETWORK=testnet
-HEDERA_ACCOUNT_ID=0.0.xxxxx          # fee-payer account for HCS
-HEDERA_PRIVATE_KEY=0x302...          # fee-payer ECDSA private key (HCS only, never used for EVM)
-DEPLOYER_ACCOUNT_ID=0.0.8290378      # KMS operator Hedera account
-
+DEPLOYER_ACCOUNT_ID=0.0.xxxxx          # fee-payer account  
+DEPLOYER_PRIVATE_KEY=0x302...          # fee-payer ECDSA private key  
+ 
 # AWS KMS (compliance operator)
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=AKIAxxxxxxxxxx
