@@ -2,13 +2,10 @@
 //
 // AWS KMS INTEGRATION:
 // ALL signing — EVM compliance transactions AND native Hedera HCS messages —
-// is performed by AWS KMS. Private key never exists anywhere.
+// is performed by AWS KMS.  Compliance Operator Private key never exists anywhere.
 // Every signing operation is recorded in AWS CloudTrail.
-//
-// FIXED: v-value selection in KmsEthersSigner._signDigest() now uses
-// ethers.recoverAddress() to determine the correct recovery bit (v=27 or v=28)
-// instead of blindly returning v=27. The old approach caused ~50% of EVM
-// transactions to fail with JSON-RPC error -32001 (INVALID_SIGNATURE).
+
+
 
 import { ethers } from 'ethers';
 import { KMSClient, SignCommand, GetPublicKeyCommand } from '@aws-sdk/client-kms';
@@ -151,12 +148,7 @@ class KmsEthersSigner extends ethers.AbstractSigner {
     const rHex = '0x' + r.toString('hex');
     const sHex = '0x' + s.toString('hex');
 
-    // ── THE FIX ───────────────────────────────────────────────────────────────
-    // Previous code used ethers.Signature.from({ r, s, v }) inside a try/catch
-    // and relied on the catch to skip invalid v values. BUT .from() with v=27
-    // or v=28 NEVER throws — both are valid Ethereum values. So the loop always
-    // returned v=27 immediately, making ~50% of transactions fail with -32001.
-    //
+
     // The correct approach (used by every production AWS KMS signer library):
     // call recoverAddress(digest, sig) and check which v reconstructs the known
     // KMS EVM address. The KMS account uses the EVM-alias auto-create pattern

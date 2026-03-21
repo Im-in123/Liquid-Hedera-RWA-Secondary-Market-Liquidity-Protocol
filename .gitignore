@@ -32,6 +32,6 @@
 
 *.zip
 Hackathon.md
-Bounty.md
+AWSBounty.md
 .env
 .env.local
