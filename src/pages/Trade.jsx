@@ -24,8 +24,6 @@ function Trade() {
   const [loading, setLoading] = useState(false);
   const [poolData, setPoolData] = useState(null);
   const [tokenBalances, setTokenBalances] = useState({ asset: '0', quote: '0' });
-  const [needsApproval, setNeedsApproval] = useState(false);
-  const [approving, setApproving] = useState(false);
   const [slippage, setSlippage] = useState(0.5);
   const [txHash, setTxHash] = useState(null);
   const [txSuccess, setTxSuccess] = useState(null);
@@ -36,7 +34,6 @@ function Trade() {
   }, [selectedSymbol, contracts]);
 
   useEffect(() => { if (isConnected && poolData) loadBalances(); }, [isConnected, poolData, account, selectedSymbol]);
-  useEffect(() => { checkApproval(); }, [amountIn, buyMode, poolData, account]);
   useEffect(() => {
     if (amountIn && parseFloat(amountIn) > 0 && poolData) calculateOutput();
     else setAmountOut('0');
@@ -69,34 +66,24 @@ function Trade() {
     } catch { setAmountOut('0'); }
   };
 
-  const checkApproval = async () => {
-    if (!amountIn || !isConnected || !poolData) { setNeedsApproval(false); return; }
-    try {
-      const tokenIn = buyMode ? pool.quoteToken : pool.assetToken;
-      const allowance = await checkAllowance(tokenIn, CONTRACTS.ADAPTIVE_AMM);
-      setNeedsApproval(allowance < ethers.parseEther(amountIn));
-    } catch { setNeedsApproval(true); }
-  };
-
-  const handleApprove = async () => {
-    if (!isConnected) { await connect(); return; }
-    setApproving(true);
-    try {
-      const tokenIn = buyMode ? pool.quoteToken : pool.assetToken;
-      await approveToken(tokenIn, CONTRACTS.ADAPTIVE_AMM, ethers.parseEther(amountIn));
-      setNeedsApproval(false);
-      toast.success('Approved', `${buyMode ? 'USDC' : pool.assetSymbol} approved for trading`);
-    } catch (err) { setTxSuccess({ type: 'error', message: 'Approval failed: ' + err.message }); }
-    finally { setApproving(false); }
-  };
-
   const handleSwap = async () => {
     if (!isConnected) { await connect(); return; }
-    if (!amountIn || parseFloat(amountIn) <= 0 || needsApproval) return;
+    if (!amountIn || parseFloat(amountIn) <= 0) return;
+
     setLoading(true); setTxHash(null); setTxSuccess(null);
     try {
       const tokenIn = buyMode ? pool.quoteToken : pool.assetToken;
       const amtInWei = ethers.parseEther(amountIn);
+      const tokenSymbol = buyMode ? 'USDC' : pool.assetSymbol;
+
+      // Auto-approve if needed
+      const allowance = await checkAllowance(tokenIn, CONTRACTS.ADAPTIVE_AMM);
+      if (allowance < amtInWei) {
+        toast.info('Approval needed', `Approving ${tokenSymbol}...`);
+        await approveToken(tokenIn, CONTRACTS.ADAPTIVE_AMM, amtInWei);
+      }
+
+      // Execute swap
       const minOut = ethers.parseEther((parseFloat(amountOut) * (1 - slippage / 100)).toFixed(18));
       const result = await executeContractCall('adaptiveAMM', 'swap', [pool.ammPoolId, tokenIn, amtInWei, minOut]);
       const txId = result?.transactionId?.toString() ?? 'submitted';
@@ -230,13 +217,9 @@ function Trade() {
             {/* Action button */}
             {!isConnected ? (
               <button onClick={connect} className="w-full btn-primary" style={{ padding: '10px', fontSize: '16px' }}>Connect Wallet</button>
-            ) : needsApproval ? (
-              <button onClick={handleApprove} disabled={approving || !amountIn} className="w-full btn-secondary disabled:opacity-50" style={{ padding: '10px', fontSize: '15px' }}>
-                {approving ? 'Approving...' : `Approve ${buyMode ? 'USDC' : pool.assetSymbol}`}
-              </button>
             ) : (
               <button onClick={handleSwap} disabled={loading || !amountIn || parseFloat(amountIn) <= 0} className="w-full btn-primary disabled:opacity-50" style={{ padding: '10px', fontSize: '15px' }}>
-                {loading ? 'Swapping...' : `Swap ${buyMode ? `USDC → ${pool.assetSymbol}` : `${pool.assetSymbol} → USDC`}`}
+                {loading ? 'Processing...' : `Swap ${buyMode ? `USDC → ${pool.assetSymbol}` : `${pool.assetSymbol} → USDC`}`}
               </button>
             )}
 

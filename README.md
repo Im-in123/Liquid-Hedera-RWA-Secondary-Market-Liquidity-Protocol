@@ -31,35 +31,32 @@ Research shows **$25B+ in tokenized RWAs have negligible secondary-market depth*
 
 
 
-1. **Dual-Mode Liquidity & Staking System**
-   - Liquidity Pools add USDC + RWA token pairs to earn 0.3% trading fees and receive LP tokens
+1. **Dual-Mode Liquidity, Staking & Earn System**
+   - **Provide liquidity**  Earn 0.3% trading fees and LP tokens on every trade that passes through a liquidity pool by adding  USDC + RWA token pairs to the  pool
    - **RWA Staking:** Stake RWA tokens directly → earn USDC yield (simulating real asset income)
-   - **LP Mining:** Stake LP tokens → earn bonus RWA token rewards
+   - **LP Mining:** Stake LP tokens and earn bonus RWA token rewards
    - Two-step flow: add liquidity → receive LP tokens → stake LP tokens for compounded yield
+
 
 2. **Appraisal-Anchored Adaptive AMM**
    - Uses Curve Finance's stableswap invariant adapted for RWA tokens
    - Price is anchored to a real-world NAV (appraisal value) via a `pegPrice` parameter — both reserves are scaled to USDC units so the curve treats them as near-peg assets
    - Amplification factor (A) controls how tightly price tracks NAV — not pure supply/demand
    - Works for assets with ZERO trading history — price discovery starts from fundamentals
-   
+
 3. **Compliance-Aware Trading (ERC-3643 / T-REX)**
    - RWA tokens implement the full ERC-3643 standard — compliance is enforced at the token level
    - Every transfer checks identity (ATSIdentityRegistry) and compliance (ComplianceRegistry)
    - Whitelist/KYC managed server-side via `/api/whitelist` — deployer key never touches the browser
-   - Jurisdiction-aware: 13 supported regions including US, EU, SG, AE, GH, NG, ZA
 
 4. **AWS KMS Secure Key Management (AWS Bounty)**
    - All compliance operator signing — both EVM transactions and native Hedera HCS messages — is performed exclusively by AWS KMS. No private key exists anywhere in the codebase or environment
-   - Custom `KmsEthersSigner` extends `ethers.AbstractSigner`, fetches the secp256k1 public key from KMS, parses DER-encoded signatures, enforces EIP-2 low-s, and determines the correct recovery bit (`v`) via `ethers.recoverAddress()` against the KMS-derived EVM address
-   - HCS messages are signed via `frozenTx.signWith(hederaPubKey, kmsSignCallback)` — the KMS key signs the transaction digest directly
-   - Every signing operation is recorded in AWS CloudTrail
-   - `TreasuryManager.sol` requires a `kmsSignature` parameter on `executeWithdrawal`, stores the KMS signature hash on-chain, and emits a `KMSSignatureRecorded` event — full on-chain audit trail of treasury actions
-   - Every KYC approval and audit log event published to HCS includes `signedWithKMS: true` and `kmsKeyId` in the message payload
+   - Every signing operation is KMS-signed with audit recorded in AWS CloudTrail
+  
 
 5. **Live HCS Audit Trail**
-   - Every protocol action (swap, stake, unstake, liquidity add/remove, KYC request, KYC approval) is published to HCS topic `0.0.8305515`
-   - The `/audit` page streams these events live from the Mirror Node with colour-coded event types, timestamps, and transaction links
+   - Every protocol action (swap, stake, unstake, liquidity add/remove, KYC request, KYC approval) is published to HCS topic  
+   - Streams  events live from the Mirror Node with colour-coded event types, timestamps, and transaction links
    - All HCS messages are KMS-signed, giving an immutable, CloudTrail-backed audit trail of all operator actions
 
 ---
